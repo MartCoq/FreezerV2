@@ -64,10 +64,7 @@ def client(lu):
         
         #Etapes avant boucle
         
-        login=input("Quel est votre login ?")
-        passwd=input("Quel est votre password ?")
-        server=input("Quel est le serveur sur lequel il faut se connecter ?")
-        boucle=True
+
 
 
         isIn=0
@@ -76,6 +73,7 @@ def client(lu):
         print(list_music)
         test_zic=msg
         titre=test_zic.split(" ")[0]
+        artiste=test_zic.split(" ")[1]
         test_zic=test_zic.replace(" ","_")
         print(test_zic,titre)
         flag=0
@@ -84,13 +82,32 @@ def client(lu):
                 flag=1                     
                 musique=i
                 print(musique)
-                break  
+                #break  
+
+                musiqueok=musique.replace(" ","_")
+                
+                #try:
+                #    os.mkdir("Musics/") # inutile mais il reste
+                #except:
+                    #proc=subprocess.Popen([f"mv",f"{musiqueok}",f"Musics/{musiqueok}"])
+                    #proc.communicate()
+                proc=subprocess.Popen(["vlc",f"/home/jmy/Musics/{musiqueok}"])
+                proc.communicate()
+                break
+        
+        print("visiblement votre musique n'est pas dans cette liste")
+        login=input("Quel est votre login ?")
+        passwd=input("Quel est votre password ?")
+        server=input("Quel est le serveur sur lequel il faut se connecter ?")
+        action=input("quelle action voulez vous accomplir ? play/show")
         
 
         socket_instance = socket.socket()
         socket_instance.connect((SERVER_ADDRESS, SERVER_PORT))
+        msg1=" messeage:"+login+" "+passwd+" "+server+" "+action+" "+titre+" "+artiste+" "
+        print(msg1)
             # Parse message to utf-8
-        socket_instance.send(msg.encode())
+        socket_instance.send(msg1.encode())
         print (socket_instance.recv(1024).decode())
         # Close connection with the server
         #socket_instance.close()
