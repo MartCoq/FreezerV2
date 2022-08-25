@@ -105,7 +105,8 @@ def client(lu):
 
         socket_instance = socket.socket()
         socket_instance.connect((SERVER_ADDRESS, SERVER_PORT))
-        msg1=" messeage:"+login+" "+passwd+" "+server+" "+action+" "+titre+" "+artiste+" "+presence+" "
+        msg1=" messeage:"+login+" "+passwd+" "+action+" "+titre+" "+artiste+" "+presence+" "
+
         print(msg1)
             # Parse message to utf-8
         socket_instance.send(msg1.encode())
