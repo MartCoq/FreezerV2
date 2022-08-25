@@ -4,6 +4,7 @@ import socket
 import mariadb
 import sys
 import re
+msg=()
 
 # classe qui permet de se connecter a mariadb et d'envoyer/recevoir des messages
 # amelioration : classe hétité de mariadb
@@ -29,7 +30,11 @@ class Maria():
     # afficher toute la table music
     def listeAll(self):
         self.cur.execute("SELECT * FROM music;")
-        return self.cur
+        liste=""
+        for line in self.cur:
+            print(line)
+            liste=liste+" "+str(line)+" \n"
+        return liste
 
    # afficher toute la table music
     def checkPresence(self,artiste,titre):
@@ -38,7 +43,7 @@ class Maria():
 
     # afficher la playlist de l'utilisateur
     def liste(self,usr):
-        self.cur.execute("SELECT artist,titre FROM playlists INNER JOIN users ON users.user_id = playlists.user_id INNER JOIN music ON music.music_id = playlists.music_id WHERE users.user_name = ?;", (usr,))
+        self.cur.execute("SELECT artiste,titre FROM playlists INNER JOIN users ON users.user_id = playlists.user_id INNER JOIN music ON music.music_id = playlists.music_id WHERE users.user_name = ?;", (usr,))
         return self.cur
 
     # ajouter une musique a la table musics (APRES YOUTUBE-DL)
@@ -102,7 +107,7 @@ class Maria():
 
     # afficher utilisateur et mot de passe
     def afficherUser(self,usr,passwd):
-        self.cur.execute("SELECT user passwd FROM users INNER JOIN security ON user_id = security_user_id WHERE user = ? AND passwd = ?",(usr,passwd))
+        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?",(usr,passwd))
         return self.cur
 
 class Server():
@@ -128,14 +133,48 @@ class Server():
         while client == True:
 
              # on recoit le message du client
-            data = con.recv(1024).decode()
-            print(addr,": ", data)
+            message = con.recv(1024).decode()
+            print(message)
+            user=message.split(" ")[0]
+            password=message.split(" ")[1]
+            ACTIONS=message.split(" ")[2]
+            DBFreezer=Maria("freezer","freezer","10.125.24.50",3306,"freezer")
+
+            if ACTIONS == "REGISTER":
+                DBFreezer.ajouterUser(user,password)
+            elif ACTIONS == "PWDUpdate":
+                newPassword=message.split(" ")[3]
+                DBFreezer.modifierPasswd(user,password,newPassword)
+            elif ACTIONS == "USERUpdate":
+                newUser=message.split(" ")[3]
+                DBFreezer.modifierUser(newUser,user,password)
+            elif ACTIONS == "SHOW":
+                if DBFreezer.afficherUser(user,password) == (user,password):
+                    DBFreezer.liste(user)
+                    print(DBFreezer.liste(user))
+                else:
+                    print("Mauvais identifiants")
+            elif ACTIONS == "SHOWALL":
+                if DBFreezer.afficherUser(user,password) != "":
+                    msg=(DBFreezer.listeAll())
+                else:
+                    print("Mauvais identifiants")
+            elif ACTIONS == "play":
+                artiste=message.split(" ")[3]
+                titre=message.split(" ")[4]
+                presence=message.split(" ")[5]
+                if DBFreezer.afficherUser(user,password) == (user,password):
+                    if presence == "OUI":
+                        if DBFreezer.checkPresence(artiste,titre):
+                            print("Présent dans la playlist")
+            else:
+                print("action n existe pas")
             print()
             ret=""
 
             # on traite le message et on cherche dans la bdd
-            if  data == "quit()" :
-                break
+            #if  data == "quit()" :
+            #    break
             # result =re.search("^([a-z0-9\-@]+) ?([0-9]+)? ?([0-9\.A-z]+)? ?([A-z\-]+)?$",data)
             # if result.group(1) == "list":
             #     get=self.db.liste()
@@ -143,11 +182,9 @@ class Server():
             # elif result.group(1) == "afficher" and result.group(2):
             #     get = self.db.afficher(result.group(2))      
             #     ret="\n"   
-
+            #DBFreezer=Maria("freezer","freezer","10.125.24.50",3306,"freezer")
             # elif result.group(1) == "ajouter" and result.group(2) and result.group(3) and result.group(4):
-                
-            #     if re.search("^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$",result.group(3)):
-            #         self.db.ajouter(result.groups())
+            #    msg=""
             #         get="OK"
             #     else:
             #         get="format ip invalide"
@@ -157,10 +194,10 @@ class Server():
 
             # else:
             #     get="commande inconnue "
-            get="OK"
-            msg=""
-            for i in get:
-                msg+=str(i)+ret
+            #get="OK"
+            
+            #for i in get:
+            #    msg+=str(i)+ret
 
             # on envoie une reponse au client
             con.sendall(msg.encode())
@@ -168,49 +205,6 @@ class Server():
         # quand le client ferme la connexion
         con.sendall("exit".encode())
 
-##### MESSAGE RECU PAR LE SOCKET
-#####        msg1=" messeage:"+user+" "+passwd+" "+action+" "+NewUser+"? "+NewPasswd+"?  "+titre+"? "+artiste+"? " # AJOUTER "+presence+" POUR LA PRESENCE DU FICHIER EN LOCAL ET RETIRER "+server+" INUTILE
-
-#####
-# 1 # Création de compte if action = register
-#####
-
-message="MARTIN MARTIN register"
-
-user=message.split(" ")[0]
-password=message.split(" ")[1]
-ACTIONS=message.split(" ")[2]
-
-DBFreezer=Maria("freezer","freezer","10.125.24.50",3306,"freezer")
-
-if ACTIONS == "register":
-    DBFreezer.ajouterUser(user,password)
-elif ACTIONS == "PWDUpdate":
-    newPassword=message.split(" ")[3]
-    DBFreezer.modifierPasswd(user,password,newPassword)
-elif ACTIONS == "USERUpdate":
-    newUser=message.split(" ")[3]
-    DBFreezer.modifierUser(newUser,user,password)
-elif ACTIONS == "show":
-    if DBFreezer.afficherUser(user,password) == (user,password):
-        DBFreezer.liste(user)
-    else:
-        print("Mauvais identifiants")
-elif ACTIONS == "showALL":
-    if DBFreezer.afficherUser(user,password) != "":
-        DBFreezer.listeALL(user)
-    else:
-        print("Mauvais identifiants")
-elif ACTIONS == "play":
-    artiste=message.split(" ")[3]
-    titre=message.split(" ")[4]
-    presence=message.split(" ")[5]
-    if DBFreezer.afficherUser(user,password) == (user,password):
-        if presence == "OUI":
-            if DBFreezer.checkPresence(artiste,titre):
-                print("Présent dans la playlist")
-else:
-    print("action n existe pas")
 
 serv=Server("10.125.24.50",69)
 serv.wait()

@@ -25,19 +25,13 @@ class Maria():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
 
-    # modifier le nom de l'utilisateur (MODIFICATION NOM D'UTILISATEUR)
-    def modifierUser(self,usr,oldUsr,passwd):
-        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?",(oldUsr,passwd))
+    # afficher la playlist de l'utilisateur
+    def liste(self,usr):
+        print("coucou")
+        self.cur.execute("SELECT artiste,titre FROM playlists INNER JOIN users ON users.user_id = playlists.user_id INNER JOIN music ON music.music_id = playlists.music_id WHERE users.user_name = ?;", (usr,))
         for i in self.cur:
             print(i)
-            if i == (oldUsr,passwd):
-                self.cur.execute("SELECT user_id from users WHERE user_name = ?;", (oldUsr,))
-                for j in self.cur:
-                    userId=j[0]
-                    print(userId)
-                self.cur.execute("UPDATE users SET user_name = ? WHERE user_id = ?",(usr,userId))
-                self.conn.commit()
-                return self.cur
+        return self.cur
 
 DBFreezer=Maria("freezer","freezer","10.125.24.50",3306,"freezer")
-DBFreezer.modifierUser("ROMAIN","ROMAINE","ROMAIN")
+DBFreezer.liste("ROMAIN")
