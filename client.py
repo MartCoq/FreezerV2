@@ -37,8 +37,8 @@ def client(lu):
         and handle it's input messages
     '''
 
-    SERVER_ADDRESS = '127.0.0.1'
-    SERVER_PORT = 13003
+    SERVER_ADDRESS = '10.125.24.50'#'127.0.0.1'
+    SERVER_PORT = 69 #13003
 
     try:
         # Instantiate socket and start connection with server
@@ -77,13 +77,14 @@ def client(lu):
         test_zic=test_zic.replace(" ","_")
         print(test_zic,titre)
         flag=0
+        presence="NON"
         for i in list_music:
             if titre.upper() in i.upper():                
                 flag=1                     
                 musique=i
                 print(musique)
                 #break  
-
+                presence="OUI"               
                 musiqueok=musique.replace(" ","_")
                 
                 #try:
@@ -96,15 +97,15 @@ def client(lu):
                 break
         
         print("visiblement votre musique n'est pas dans cette liste")
-        login=input("Quel est votre login ?")
-        passwd=input("Quel est votre password ?")
-        server=input("Quel est le serveur sur lequel il faut se connecter ?")
-        action=input("quelle action voulez vous accomplir ? play/show")
+        login=input("Quel est votre login ?: ")
+        passwd=input("Quel est votre password ?: ")
+        server=input("Quel est le serveur sur lequel il faut se connecter ?: ")
+        action=input("quelle action voulez vous accomplir ? play/show: ")
         
 
         socket_instance = socket.socket()
         socket_instance.connect((SERVER_ADDRESS, SERVER_PORT))
-        msg1=" messeage:"+login+" "+passwd+" "+server+" "+action+" "+titre+" "+artiste+" "
+        msg1=" messeage:"+login+" "+passwd+" "+server+" "+action+" "+titre+" "+artiste+" "+presence+" "
         print(msg1)
             # Parse message to utf-8
         socket_instance.send(msg1.encode())
