@@ -1,0 +1,19 @@
+action 
+
+Show :
+user password show
+
+Register
+user password register
+
+Password update
+user password pwupdate newpassword
+
+User update
+user password userupdate newuser
+
+Show all :
+user password showall 
+
+Play :
+user password play artist titre
