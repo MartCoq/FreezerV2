@@ -39,6 +39,7 @@ class Maria():
     def ajouterMusic(self,artist,title):
         self.cur.execute("INSERT INTO music (artist,title) VALUES (?,?)",(artist,title))
         self.conn.commit()
+        return self.cur
 
     # ajouter une chanson a la table playlists (APRES REQUETE UTILISATEUR D'UNE MUSIQUE DEJA DANS LE SERVEUR OU YOUTUBE-DL)
     def ajouterMusic(self,usr,artist,title):
@@ -60,16 +61,19 @@ class Maria():
             user_id=i
         self.cur.execute("INSERT INTO security (passwd) VALUES (?) WHERE security_user_id = ? ",(passwd,user_id))
         self.conn.commit()
+        return self.cur
 
     # supprimer une musique de la playliste de l'utilisateur (MISE A JOUR PLAYLIST UTILISATEUR)
     def supprimer(self,usr,artist,title):
         self.cur.execute("DELETE FROM playlists INNER JOIN musics ON playlist_music_id = music_id INNER JOIN users ON playlist_user_id = user_id WHERE user = ? artiste = ? AND title = ?",(usr,artist,title))
         self.conn.commit()
+        return self.cur
 
     # modifier le nom de l'utilisateur (MODIFICATION NOM D'UTILISATEUR)
     def modifierUser(self,usr):
         self.cur.execute("UPDATE users SET user = ? ",(usr))
         self.conn.commit()
+        return self.cur
 
     # modifier le mot de passe de l'utilisateur dans security (MODIFICATION MOT DE PASSE)
     def modifierPasswd(self,usr,passwd):
@@ -78,12 +82,13 @@ class Maria():
             user_id=i
         self.cur.execute("UPDATE security SET passwd = ? WHERE security_user_id = ? ",(passwd,user_id))
         self.conn.commit()
+        return self.cur
 
-############################################################################
-# ON EN EST LA !                                                           #
-# FAUT-IL PREVOIR UNE DEFINITION POUR AFFICHER LE COUPLE USER + PASSWORD ? #
-# RELIRE LA CLASSE SERVEUR                                                 #
-############################################################################
+    # afficher utilisateur et mot de passe
+    def afficherUser(self,usr,passwd):
+        self.cur.execute("SELECT user passwd FROM users INNER JOIN security ON user_id = security_user_id WHERE user = ? AND passwd = ?",(usr,passwd))
+        self.conn.commit()
+        return self.cur
 
 class Server():
     def __init__ (self, host , port):
