@@ -2,6 +2,7 @@
 
 import socket
 import mariadb
+import os
 import sys
 import re
 
@@ -28,17 +29,22 @@ class Maria():
 
     # afficher toute la table music
     def listeAll(self):
-        self.cur.execute("SELECT * FROM music;")
+        self.cur.execute("SELECT artiste,titre FROM music;")
         return self.cur
 
-   # afficher toute la table music
+   # vérifier présence musique dans la table music
     def checkPresence(self,artiste,titre):
-        self.cur.execute("SELECT * FROM music, WHERE artiste = ? AND titre = ?;", (artiste,titre))
+        self.cur.execute("SELECT artiste,titre FROM music, WHERE artiste = ? AND titre = ?;", (artiste,titre))
         return self.cur
 
     # afficher la playlist de l'utilisateur
     def liste(self,usr):
         self.cur.execute("SELECT artist,titre FROM playlists INNER JOIN users ON users.user_id = playlists.user_id INNER JOIN music ON music.music_id = playlists.music_id WHERE users.user_name = ?;", (usr,))
+        return self.cur
+
+    # vérifier présence musique dans la table playlists
+    def checkPresencePlaylist(self,usr,artiste,titre):
+        self.cur.execute("SELECT artist,titre FROM playlists INNER JOIN users ON users.user_id = playlists.user_id INNER JOIN music ON music.music_id = playlists.music_id WHERE users.user_name = ? AND music.artiste = ? AND music.titre = ?;", (usr,artiste,titre))
         return self.cur
 
     # ajouter une musique a la table musics (APRES YOUTUBE-DL)
@@ -57,7 +63,7 @@ class Maria():
             music_id=j[0]
         self.cur.execute("INSERT INTO playlists (playlists.user_id,playlists.music_id) VALUES (?,?)",(usr_id,music_id))
         self.conn.commit()
-        return self.curACTIONS
+        return self.cur
 
     # ajouter un user dans users et passwd dans security (CREATION DE COMPTE OU LOGIN)
     def ajouterUser(self,usr,passwd):
@@ -179,36 +185,65 @@ message="MARTIN MARTIN register"
 
 user=message.split(" ")[0]
 password=message.split(" ")[1]
-ACTIONS=message.split(" ")[2]
+action=message.split(" ")[2]
 
 DBFreezer=Maria("freezer","freezer","10.125.24.50",3306,"freezer")
 
-if ACTIONS == "register":
+if action == "register":
     DBFreezer.ajouterUser(user,password)
-elif ACTIONS == "PWDUpdate":
+elif action == "PWDUpdate":
     newPassword=message.split(" ")[3]
     DBFreezer.modifierPasswd(user,password,newPassword)
-elif ACTIONS == "USERUpdate":
+elif action == "USERUpdate":
     newUser=message.split(" ")[3]
     DBFreezer.modifierUser(newUser,user,password)
-elif ACTIONS == "show":
+elif action == "show":
     if DBFreezer.afficherUser(user,password) == (user,password):
         DBFreezer.liste(user)
+        print(DBFreezer.liste(user))
     else:
         print("Mauvais identifiants")
-elif ACTIONS == "showALL":
+elif action == "showALL":
     if DBFreezer.afficherUser(user,password) != "":
         DBFreezer.listeALL(user)
     else:
         print("Mauvais identifiants")
-elif ACTIONS == "play":
+elif action == "play":
     artiste=message.split(" ")[3]
     titre=message.split(" ")[4]
     presence=message.split(" ")[5]
+    fileName=message.split(" ")[6]
     if DBFreezer.afficherUser(user,password) == (user,password):
         if presence == "OUI":
-            if DBFreezer.checkPresence(artiste,titre):
-                print("Présent dans la playlist")
+            if DBFreezer.checkPresence(artiste,titre) == (artiste,titre):
+                print("Musique présente dans Freezer")
+            else:
+                # FAIRE COMMANDE FTP GET pour récupérer 
+                os.system("ftp -i -nV "+self.clientAddr()+" <<EOF user "+user+ +password+" get ~/Musics/"+fileName+" EOF")
+                DBFreezer.ajouterMusic(artiste,titre)
+                DBFreezer.ajouterMusicPlaylist(user,artiste,titre)
+            if DBFreezer.checkPresencePlaylist(user,artiste,titre) == (artiste,titre):
+                print("Musique déjà présente dans la playliste")
+            else:
+                DBFreezer.ajouterMusicPlaylist(user,artiste,titre)
+        else:
+            if DBFreezer.checkPresence(artiste,titre) == (artiste,titre):
+                print("Musique présente dans Freezer")
+                # FAIRE COMMANDE FTP PUT pour envoyer la musique
+                os.system("ftp -i -nV "+self.clientAddr()+" <<EOF user "+user+ +password+" put ~/Musics/"+fileName+" EOF")
+            else:
+                # FAIRE COMMANDE YOUTUBE-DL pour télécharger le musique
+                os.system("youtube-dl -x -o ~/Music/"+artiste+"_"+titre+".%(ext)s ytsearch1:"+artiste+" "+titre+")
+                # FAIRE COMMANDE FTP GET pour récupérer
+                os.system("ftp -i -nV "+self.clientAddr()+" <<EOF user "+user+ +password+" put ~/Musics/"+fileName+" EOF")
+                DBFreezer.ajouterMusic(artiste,titre)
+                DBFreezer.ajouterMusicPlaylist(user,artiste,titre)
+            if DBFreezer.checkPresencePlaylist(user,artiste,titre) == (artiste,titre):
+                print("Musique déjà présente dans la playliste")
+            else:
+                DBFreezer.ajouterMusicPlaylist(user,artiste,titre)
+
+            
 else:
     print("action n existe pas")
 
