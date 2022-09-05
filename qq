@@ -1,0 +1,18 @@
+○ jenkins.service - Extendable continuous integration server
+     Loaded: loaded (]8;;file://monReseau/usr/lib/systemd/system/jenkins.service/usr/lib/systemd/system/jenkins.service]8;;; [0;1;32menabled[0m; preset: [0;1;38;5;185mdisabled[0m)
+     Active: inactive (dead) since Fri 2022-08-26 09:44:05 CEST; 11min ago
+   Duration: 527ms
+    Process: 105474 ExecStart=/bin/sh -c eval $JENKINS_COMMAND_LINE (code=exited, status=0/SUCCESS)
+   Main PID: 105474 (code=exited, status=0/SUCCESS)
+        CPU: 534ms
+
+août 26 09:44:05 monReseau jenkins[105477]: août 26, 2022 9:44:05 AM executable.Main verifyJavaVersion
+août 26 09:44:05 monReseau jenkins[105477]: GRAVE: Running with Java class version 52, which is older than the Minimum required version 55. See https://jenkins.io/redirect/java-support/
+août 26 09:44:05 monReseau jenkins[105477]: java.lang.UnsupportedClassVersionError: 52.0
+août 26 09:44:05 monReseau jenkins[105477]:         at executable.Main.verifyJavaVersion(Main.java:145)
+août 26 09:44:05 monReseau jenkins[105477]:         at executable.Main.main(Main.java:109)
+août 26 09:44:05 monReseau jenkins[105477]: Jenkins requires Java versions [17, 11] but you are running with Java 1.8 from /usr/lib/jvm/java-8-openjdk/jre
+août 26 09:44:05 monReseau jenkins[105477]: java.lang.UnsupportedClassVersionError: 52.0
+août 26 09:44:05 monReseau jenkins[105477]:         at executable.Main.verifyJavaVersion(Main.java:145)
+août 26 09:44:05 monReseau jenkins[105477]:         at executable.Main.main(Main.java:109)
+août 26 09:44:05 monReseau systemd[1]: jenkins.service: Deactivated successfully.
