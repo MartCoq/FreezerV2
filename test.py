@@ -25,13 +25,15 @@ class Maria():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
 
-    # afficher la playlist de l'utilisateur
-    def liste(self,usr):
-        print("coucou")
-        self.cur.execute("SELECT artiste,titre FROM playlists INNER JOIN users ON users.user_id = playlists.user_id INNER JOIN music ON music.music_id = playlists.music_id WHERE users.user_name = ?;", (usr,))
+    # ajouter un user dans users et passwd dans security (CREATION DE COMPTE OU LOGIN)
+    def ajouterUser(self,usr,passwd):
+        self.cur.execute("INSERT INTO users (user_name) VALUES (?) ;",(usr,))
+        self.cur.execute("SELECT user_id FROM users WHERE user_name = ? ;", (usr,))
         for i in self.cur:
-            print(i)
+            userId = i[0]
+        self.cur.execute("INSERT INTO security (user_id, password) VALUES (?,?) ;",(userId, passwd))
+        self.conn.commit()
         return self.cur
 
-DBFreezer=Maria("freezer","freezer","10.125.24.50",3306,"freezer")
-DBFreezer.liste("ROMAIN")
+DBFreezer=Maria("root","root","172.20.0.2",3306,"freezer")
+DBFreezer.ajouterUser("ROMAIN","ROMAIN")

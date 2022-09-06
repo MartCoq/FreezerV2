@@ -48,7 +48,7 @@ class Maria():
 
     # ajouter une musique a la table musics (APRES YOUTUBE-DL)
     def ajouterMusic(self,artist,title):
-        self.cur.execute("INSERT INTO music (artiste,titre) VALUES (?,?)",(artist,title))
+        self.cur.execute("INSERT INTO music (artiste,titre) VALUES (?,?);",(artist,title))
         self.conn.commit()
         return self.cur
 
@@ -62,24 +62,27 @@ class Maria():
             music_id=j[0]
         self.cur.execute("INSERT INTO playlists (playlists.user_id,playlists.music_id) VALUES (?,?)",(usr_id,music_id))
         self.conn.commit()
-        return self.curACTIONS
+        return self.cur
 
     # ajouter un user dans users et passwd dans security (CREATION DE COMPTE OU LOGIN)
     def ajouterUser(self,usr,passwd):
-        self.cur.execute("INSERT INTO users (user) VALUES (?)",(usr,))
-        self.cur.execute("INSERT INTO security (password) VALUES (?) ",(passwd,))
+        self.cur.execute("INSERT INTO users (user_name) VALUES (?) ;",(usr,))
+        self.cur.execute("SELECT user_id FROM users WHERE user_name = ? ;", (usr,))
+        for i in self.cur:
+            usr_id=i[0]
+        self.cur.execute("INSERT INTO security (user_id, password) VALUES (?,?) ;",(usr_id, passwd))
         self.conn.commit()
         return self.cur
 
     # supprimer une musique de la playliste de l'utilisateur (MISE A JOUR PLAYLIST UTILISATEUR)
     def supprimer(self,usr,artist,title):
-        self.cur.execute("DELETE playlists FROM playlists INNER JOIN music ON playlists.music_id = music.music_id INNER JOIN users ON playlists.user_id = users.user_id WHERE user_name = ? artiste = ? AND titre = ?",(usr,artist,title))
+        self.cur.execute("DELETE playlists FROM playlists INNER JOIN music ON playlists.music_id = music.music_id INNER JOIN users ON playlists.user_id = users.user_id WHERE user_name = ? artiste = ? AND titre = ?;",(usr,artist,title))
         self.conn.commit()
         return self.cur
 
     # modifier le nom de l'utilisateur (MODIFICATION NOM D'UTILISATEUR)
     def modifierUser(self,usr,oldUsr,passwd):
-        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?",(oldUsr,passwd))
+        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?;",(oldUsr,passwd))
         for i in self.cur:
             if i == (oldUsr,passwd):
                 self.cur.execute("SELECT user_id from users WHERE user_name = ?;", (oldUsr,))
@@ -93,13 +96,13 @@ class Maria():
 
     # modifier le mot de passe de l'utilisateur dans security (MODIFICATION MOT DE PASSE)
     def modifierPasswd(self,usr,oldPasswd,passwd):
-        self.cur.execute("SELECT user_id from users WHERE user = ?",(usr,))
+        self.cur.execute("SELECT user_id from users WHERE user = ?;",(usr,))
         for i in self.cur:
             user_id=i[0]
-        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?",(usr,oldPasswd))
+        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?;",(usr,oldPasswd))
         for j in self.cur:
             if j == (usr,oldPasswd):
-                self.cur.execute("UPDATE security SET password = ? WHERE security_user_id = ? ",(passwd,user_id))
+                self.cur.execute("UPDATE security SET password = ? WHERE security_user_id = ? ;",(passwd,user_id))
             else:
                 print("Mauvais identifiants")
         self.conn.commit()
@@ -107,7 +110,7 @@ class Maria():
 
     # afficher utilisateur et mot de passe
     def afficherUser(self,usr,passwd):
-        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?",(usr,passwd))
+        self.cur.execute("SELECT user_name, password FROM users INNER JOIN security ON users.user_id = security.user_id WHERE user_name = ? AND password = ?;",(usr,passwd))
         return self.cur
 
 class Server():
@@ -117,7 +120,7 @@ class Server():
         self.s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.bind((host, port))
         self.s.listen(3)
-        self.db = Maria("freezer","freezer","10.125.24.50",3306,"freezer")
+        self.db = Maria("root","root","172.20.0.2",3306,"freezer")
         self.clientAddr=""
 
     # attendre une connexion client (deja pret pour multhreading)
@@ -138,7 +141,7 @@ class Server():
             user=message.split(" ")[0]
             password=message.split(" ")[1]
             ACTIONS=message.split(" ")[2]
-            DBFreezer=Maria("freezer","freezer","10.125.24.50",3306,"freezer")
+            DBFreezer=Maria("root","root","172.20.0.2",3306,"freezer")
 
             if ACTIONS == "REGISTER":
                 DBFreezer.ajouterUser(user,password)
@@ -206,6 +209,6 @@ class Server():
         con.sendall("exit".encode())
 
 
-serv=Server("10.125.24.50",69)
+serv=Server("172.20.0.2",3306)
 serv.wait()
 print("server closed ")
