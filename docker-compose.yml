@@ -29,8 +29,9 @@ services :
       - "443:443"
     networks:
       - "FreezerNetwork"
-
-#depends_on   à ajouter si un service doit être lancé avant un autre
+    depends_on:
+      - "Mariadb"
+      - "Proftpd"
 
 networks:
-  FreezerNetworks: {}
+  FreezerNetwork: {}
