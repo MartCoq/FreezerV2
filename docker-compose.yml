@@ -1,0 +1,36 @@
+version: "3.9"
+
+services :
+# docker mariadb
+  Mariadb :
+    build: ./maria/
+    image: "maria"
+    networks:
+      - "FreezerNetwork"
+
+# docker jenkins
+
+# docker agent ?
+# docker git ?
+
+# docker proftpd
+  Proftpd :
+    build: ./proftpd/
+    image: "pro"
+    networks:
+      - "FreezerNetwork"
+
+# docker nginx
+  Nginx :
+    build: ./nginx/
+    image: "nginx"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - "FreezerNetwork"
+
+#depends_on   à ajouter si un service doit être lancé avant un autre
+
+networks:
+  FreezerNetworks: {}
