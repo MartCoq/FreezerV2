@@ -1,37 +1,61 @@
 version: "3.9"
 
-services :
+services:
+
 # docker mariadb
-  Mariadb :
+  mariadb:
     build: ./maria/
-    image: "maria"
+    image: "mariadb"
     networks:
-      - "FreezerNetwork"
+      FreezerNetwork:
+        ipv4_address: 172.17.0.1
 
 # docker jenkins
+  jenkins:
+    build: ./jenkins/
+    image: "jenkins"
+    networks:
+      FreezerNetwork:
+        ipv4_address: 172.17.0.2
+    depends_on:
+      - "Agent"
 
-# docker agent ?
-# docker git ?
+# docker agent
+  agent:
+    build: ./agent/
+    image: "agent"
+    networks:
+      FreezerNetwork:
+        ipv4_address: 172.17.0.3
 
 # docker proftpd
-  Proftpd :
+  proftpd :
     build: ./proftpd/
     image: "pro"
     networks:
-      - "FreezerNetwork"
+      FreezerNetwork:
+        ipv4_address: 172.17.0.4
 
 # docker nginx
-  Nginx :
+  nginx :
     build: ./nginx/
     image: "nginx"
     ports:
       - "80:80"
       - "443:443"
     networks:
-      - "FreezerNetwork"
+      FreezerNetwork:
+        ipv4_address: 172.17.0.5
     depends_on:
-      - "Mariadb"
-      - "Proftpd"
+      - "mariadb"
+      - "proftpd"
+      - "jenkins"
+      - "agent"
 
+# définition du réseau
 networks:
-  FreezerNetwork: {}
+  FreezerNetwork:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.17.0.0/24"
