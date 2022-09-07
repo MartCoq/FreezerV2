@@ -25,7 +25,7 @@ try:
     conn = mariadb.connect(
         user="root",
         password="root",
-        host="192.170.0.50",
+        host="172.18.0.6",
         database="freezer"
     )
 #    print("connexion reussite")
