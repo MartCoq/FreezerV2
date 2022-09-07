@@ -6,13 +6,18 @@ services:
   mariadb:
     build: ./maria/
     image: "mariadb"
+    container_name: "maria1"
+    environment:
+      - MARIADB_ROOT_PASSWORD=root
     networks:
       FreezerNetwork:
-        ipv4_address: 172.18.0.1
+        ipv4_address: 172.18.0.6
+
 
 # docker jenkins
   jenkins:
     build: ./jenkins/
+    container_name: "jenkins1"
     image: "jenkins"
     networks:
       FreezerNetwork:
@@ -23,6 +28,7 @@ services:
 # docker agent
   agent:
     build: ./agent/
+    container_name: "agent1"
     image: "agent"
     networks:
       FreezerNetwork:
@@ -31,6 +37,7 @@ services:
 # docker proftpd
   proftpd :
     build: ./proftpd/
+    container_name: "proftpd1"
     image: "pro"
     networks:
       FreezerNetwork:
@@ -39,6 +46,7 @@ services:
 # docker nginx
   nginx :
     build: ./nginx/
+    container_name: "nginx1"
     image: "nginx"
     ports:
       - "80:80"
