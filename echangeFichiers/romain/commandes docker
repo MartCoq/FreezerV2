@@ -12,3 +12,5 @@ sudo docker run -dit --name tomcatRom --network sparkJava --ip 192.168.0.20 -p 8
 sudo docker build -t sshrom -f ssh/sshFile ssh/
 sudo docker run -dit --name sshRom --network sparkJava --ip 192.168.0.30 -p 22:22 sshrom
 
+sudo docker run -d --name nginxRom --network freezerDocker  --ip 192.170.0.10 -p 80:80 -p 443:443 nginxrom
+
