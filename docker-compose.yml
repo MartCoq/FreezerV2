@@ -8,7 +8,7 @@ services:
     image: "mariadb"
     networks:
       FreezerNetwork:
-        ipv4_address: 172.17.0.1
+        ipv4_address: 172.18.0.1
 
 # docker jenkins
   jenkins:
@@ -16,7 +16,7 @@ services:
     image: "jenkins"
     networks:
       FreezerNetwork:
-        ipv4_address: 172.17.0.2
+        ipv4_address: 172.18.0.2
     depends_on:
       - "Agent"
 
@@ -26,7 +26,7 @@ services:
     image: "agent"
     networks:
       FreezerNetwork:
-        ipv4_address: 172.17.0.3
+        ipv4_address: 172.18.0.3
 
 # docker proftpd
   proftpd :
@@ -34,7 +34,7 @@ services:
     image: "pro"
     networks:
       FreezerNetwork:
-        ipv4_address: 172.17.0.4
+        ipv4_address: 172.18.0.4
 
 # docker nginx
   nginx :
@@ -45,7 +45,7 @@ services:
       - "443:443"
     networks:
       FreezerNetwork:
-        ipv4_address: 172.17.0.5
+        ipv4_address: 172.18.0.5
     depends_on:
       - "mariadb"
       - "proftpd"
@@ -58,4 +58,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.17.0.0/24"
+        - subnet: "172.18.0.0/24"
