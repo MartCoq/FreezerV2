@@ -14,32 +14,32 @@ services:
         ipv4_address: 172.18.0.6
 
 # docker jenkins
-#  jenkins:
-#   build: ./jenkins/
-#   image: "jenkinsfreezer"
-#   networks:
-#     FreezerNetwork:
-#       ipv4_address: 172.18.0.2
-#   depends_on:
-#     - "Agent"
+  jenkins:
+   build: ./jenkins/
+   image: "jenkinsfreezer"
+   networks:
+     FreezerNetwork:
+       ipv4_address: 172.18.0.2
+   depends_on:
+     - "Agent"
 
 #docker agent
-  agent:
-    build: ./agent/
-    container_name: "agent1"
-    image: "agentf"
-    networks:
-      FreezerNetwork:
-        ipv4_address: 172.18.0.3
+#  agent:
+#    build: ./agent/
+#    container_name: "agent1"
+#    image: "agentf"
+#    networks:
+#      FreezerNetwork:
+#        ipv4_address: 172.18.0.3
 
 # docker proftpd
-  proftpd:
-    build: ./proftpd/
-    container_name: "proftpd1"
-    image: "proftpdf"
-    networks:
-      FreezerNetwork:
-        ipv4_address: 172.18.0.4
+#  proftpd:
+#    build: ./proftpd/
+#    container_name: "proftpd1"
+#    image: "proftpdf"
+#    networks:
+#      FreezerNetwork:
+#        ipv4_address: 172.18.0.4
 
 # docker nginx
   nginx:
