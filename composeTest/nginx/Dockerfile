@@ -23,7 +23,7 @@ RUN apt-get install -y spawn-fcgi fcgiwrap \
 RUN sed -e '/^fastcgi_param  DOCUMENT_ROOT/ s/^#*/#/' -i /etc/nginx/fastcgi_params 
 RUN sed -e '/^fastcgi_param  SCRIPT_NAME/ s/^#*/#/' -i /etc/nginx/fastcgi_params 
 RUN chmod 755 -R /usr/share/nginx/
-RUN chown nginx -R /usr/
+RUN chown nginx -R /usr/share/nginx
 
 EXPOSE 80
 
