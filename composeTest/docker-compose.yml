@@ -14,12 +14,12 @@ services:
 #        ipv4_address: 172.18.0.6
 
 # docker jenkins
-  jenkins:
-   build: ./jenkins/
-   image: "jenkinsfreezer"
-   networks:
-     FreezerNetwork:
-       ipv4_address: 172.18.0.2
+#  jenkins:
+#   build: ./jenkins/
+#   image: "jenkinsfreezer"
+#   networks:
+#     FreezerNetwork:
+#       ipv4_address: 172.18.0.2
 #   depends_on:
 #     - "Agent"
 
