@@ -25,13 +25,13 @@ services:
 #     - "Agent"
 
 # docker agent
-  agent:
-    build: ./agent/
-    container_name: "agent1"
-    image: "agentf"
-    networks:
-      FreezerNetwork:
-        ipv4_address: 172.18.0.3
+#  agent:
+    #    build: ./agent/
+    #    container_name: "agent1"
+    #    image: "agentf"
+    #    networks:
+      #      FreezerNetwork:
+        #        ipv4_address: 172.18.0.3
 
 # docker proftpd
 #  proftpd:
@@ -55,8 +55,8 @@ services:
         ipv4_address: 172.18.0.5
     depends_on:
       - "jenkin"
-      - "proftpd"
-      - "agent"
+#      - "proftpd"
+        #     - "agent"
 
 # définition du réseau
 networks:
