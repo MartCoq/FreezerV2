@@ -24,14 +24,14 @@ services:
 #   depends_on:
 #     - "Agent"
 
-# docker agent
-#  agent:
-    #    build: ./agent/
-    #    container_name: "agent1"
-    #    image: "agentf"
-    #    networks:
-      #      FreezerNetwork:
-        #        ipv4_address: 172.18.0.3
+ docker agent
+  agent:
+    build: ./agent/
+    container_name: "agentFreezer"
+    image: "agentfreezer"
+    networks:
+      FreezerNetwork:
+        ipv4_address: 172.18.0.3
 
 # docker proftpd
 #  proftpd:
