@@ -1,2 +1,0 @@
-FROM jenkins/jenkins
-COPY ./docker_key.pub /var/jenkins_home/.ssh/authorized_keys
