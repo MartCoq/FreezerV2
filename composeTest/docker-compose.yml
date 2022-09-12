@@ -53,8 +53,8 @@ services:
     networks:
       FreezerNetwork:
         ipv4_address: 172.18.0.5
-    depends_on:
-      - "jenkin"
+        #    depends_on:
+      #      - "jenkins"
 #      - "proftpd"
         #     - "agent"
 
