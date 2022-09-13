@@ -1,16 +1,15 @@
 FROM nginx:stable
-RUN mkdir /etc/nginx/ssl
-RUN mkdir /var/log/nginx/jenkins
 RUN apt-get update -yq
-RUN apt-get install python3 -yq
-RUN apt-get install python3-pip -yq
-RUN apt-get install libmariadb3 libmariadb-dev -yq
+RUN apt-get autoclean
+RUN apt-get install python3-pip -yq && apt-get clean
+RUN apt-get install libmariadb3 libmariadb-dev -yq && apt-get clean
 RUN pip3 install mariadb --no-input -q
 RUN pip3 install cgi-tools --no-input -q
+RUN mkdir /etc/nginx/ssl
+RUN mkdir /var/log/nginx/jenkins
 COPY nginx_cert.crt /etc/nginx/ssl
 COPY nginx_key.key /etc/nginx/ssl
 COPY passphrase_key_rsa /etc/nginx/ssl
-#COPY static-html-directory/index.html /usr/share/nginx/html/index.html
 COPY index.cgi /usr/share/nginx/html/index.cgi
 COPY afficher.cgi /usr/share/nginx/html/afficher.cgi
 COPY default.conf /etc/nginx/conf.d/default.conf
