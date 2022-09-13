@@ -40,7 +40,7 @@ except:
     print("not ok")
 
 cur.execute(f"INSERT INTO music (artiste, titre) values ('adele','{music}');")
-cur.commit()
+cur.conn.commit()
 
 cur.execute(f"SELECT * FROM music WHERE user_name='{username}';")
 for line in cur:
