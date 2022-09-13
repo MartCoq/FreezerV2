@@ -1,9 +1,9 @@
 FROM nginx
 RUN mkdir /etc/nginx/ssl
 RUN mkdir /var/log/nginx/jenkins
-RUN apt update -yq
-RUN apt install python3-pip -yq
-RUN apt install libmariadb3 libmariadb-dev -yq
+RUN apt-get update -yq
+RUN apt-get install python3-pip -yq
+RUN apt-get install libmariadb3 libmariadb-dev -yq
 RUN pip3 install mariadb --no-input -q
 RUN pip3 install cgi-tools --no-input -q
 COPY nginx_cert.crt /etc/nginx/ssl
