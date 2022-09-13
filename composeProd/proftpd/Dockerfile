@@ -14,7 +14,10 @@ COPY modules.conf /etc/proftpd/modules.conf
 RUN useradd freezer
 RUN echo "freezer:freezer" | chpasswd
 RUN mkdir -p /home/freezer/music
+RUN mkdir -p /home/cgi
 RUN chown freezer: -R /home/freezer/music
+RUN chown freezer:1000 -R /home/cgi
+RUN chmod 775 -R /home/cgi
 
 EXPOSE 21
 

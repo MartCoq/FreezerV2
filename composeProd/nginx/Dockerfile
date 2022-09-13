@@ -1,5 +1,6 @@
 FROM nginx
 RUN mkdir /etc/nginx/ssl
+RUN mkdir /home/cgi
 RUN mkdir /var/log/nginx/jenkins
 RUN apt update -yq
 RUN apt install python3-pip -yq
@@ -24,6 +25,8 @@ RUN sed -e '/^fastcgi_param  DOCUMENT_ROOT/ s/^#*/#/' -i /etc/nginx/fastcgi_para
 RUN sed -e '/^fastcgi_param  SCRIPT_NAME/ s/^#*/#/' -i /etc/nginx/fastcgi_params 
 RUN chmod 755 -R /usr/share/nginx/
 RUN chown nginx -R /usr/
+RUN chown nginx:1000 -R /home/cgi
+RUN chmod 775 -R /home/cgi
 
 EXPOSE 80
 
