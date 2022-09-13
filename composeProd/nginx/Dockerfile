@@ -11,11 +11,11 @@ COPY nginx_cert.crt /etc/nginx/ssl
 COPY nginx_key.key /etc/nginx/ssl
 COPY passphrase_key_rsa /etc/nginx/ssl
 #COPY static-html-directory/index.html /usr/share/nginx/html/index.html
-COPY index.cgi /usr/share/nginx/html/index.cgi
-COPY afficher.cgi /usr/share/nginx/html/afficher.cgi
-COPY streaming.cgi /usr/share/nginx/html/streaming.cgi
-COPY default.conf /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.cgi /home/cgi/index.cgi
+COPY afficher.cgi /home/cgi/afficher.cgi
+COPY streaming.cgi /home/cgi/streaming.cgi
+COPY default.conf /home/cgi/default.conf
+COPY nginx.conf /home/cgi/nginx.conf
 
 RUN apt-get install -y spawn-fcgi fcgiwrap \
  && apt-get clean \
