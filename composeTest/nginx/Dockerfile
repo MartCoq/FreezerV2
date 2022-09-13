@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:latest
 RUN mkdir /etc/nginx/ssl
 RUN mkdir /var/log/nginx/jenkins
 RUN apt-get update -yq
