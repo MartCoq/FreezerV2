@@ -1,0 +1,31 @@
+ERROR: Launching agent process aborted.
+Also:   java.lang.Throwable: launched here
+	at hudson.slaves.SlaveComputer._connect(SlaveComputer.java:287)
+	at hudson.model.Computer.connect(Computer.java:445)
+	at hudson.slaves.SlaveComputer.tryReconnect(SlaveComputer.java:837)
+	at hudson.slaves.RetentionStrategy$Always.check(RetentionStrategy.java:173)
+	at hudson.slaves.RetentionStrategy$Always.check(RetentionStrategy.java:161)
+	at hudson.slaves.ComputerRetentionWork$1.run(ComputerRetentionWork.java:71)
+	at hudson.model.Queue._withLock(Queue.java:1396)
+	at hudson.model.Queue.withLock(Queue.java:1270)
+	at hudson.slaves.ComputerRetentionWork.doRun(ComputerRetentionWork.java:62)
+	at hudson.triggers.SafeTimerTask.run(SafeTimerTask.java:94)
+	at jenkins.security.ImpersonatingScheduledExecutorService$1.run(ImpersonatingScheduledExecutorService.java:69)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+java.lang.InterruptedException: Validate configuration:
+The selected credentials cannot be found
+
+	at hudson.plugins.sshslaves.SSHLauncher.checkConfig(SSHLauncher.java:920)
+	at hudson.plugins.sshslaves.SSHLauncher.launch(SSHLauncher.java:412)
+	at hudson.slaves.SlaveComputer.lambda$_connect$0(SlaveComputer.java:298)
+	at jenkins.util.ContextResettingExecutorService$2.call(ContextResettingExecutorService.java:48)
+	at jenkins.security.ImpersonatingExecutorService$2.call(ImpersonatingExecutorService.java:82)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)
