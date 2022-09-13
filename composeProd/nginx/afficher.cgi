@@ -2,6 +2,43 @@
 import cgi, cgitb
 import mariadb
 
+#########################################################
+
+class Maria():
+    def __init__ (self,user,password,host,port,db):
+        try:  
+            self.conn = mariadb.connect(
+                user=user,
+                password=password,
+                host=host,
+                port=port,
+                database=db
+                )
+            
+            # Get Cursor
+            self.cur = self.conn.cursor()
+
+        except mariadb.Error as e:
+            print(f"Error connecting to MariaDB Platform: {e}")
+            sys.exit(1)
+
+    # ajouter un user dans users et passwd dans security (CREATION DE COMPTE OU LOGIN)
+    def ajouterUser(self,usr,passwd):
+        self.cur.execute("INSERT INTO users (user_name) VALUES (?) ;",(usr,))
+        self.cur.execute("SELECT user_id FROM users WHERE user_name = ? ;", (usr,))
+        for i in self.cur:
+            userId = i[0]
+        self.cur.execute("INSERT INTO security (user_id, password) VALUES (?,?) ;",(userId, passwd))
+        self.conn.commit()
+        return self.cur
+       
+DBFreezer=Maria("root","root","10.125.23.73",3306,"freezer")
+DBFreezer.ajouterUser("ROMAIN","ROMAIN")
+DBFreezer.ajouterUser("JIMMY","JIMMY")
+DBFreezer.ajouterUser("DRSOSO","DRSOSO")
+DBFreezer.ajouterUser("MARTIN","MARTIN")
+
+#############################################################
 
 print ("Content-Type: text/html")
 print ("")
