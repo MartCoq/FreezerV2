@@ -14,8 +14,8 @@ COPY passphrase_key_rsa /etc/nginx/ssl
 COPY index.cgi /home/cgi/index.cgi
 COPY afficher.cgi /home/cgi/afficher.cgi
 COPY streaming.cgi /home/cgi/streaming.cgi
-COPY default.conf /home/cgi/default.conf
-COPY nginx.conf /home/cgi/nginx.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN apt-get install -y spawn-fcgi fcgiwrap \
  && apt-get clean \
