@@ -6,7 +6,7 @@ services:
   mariadb:
     build: ./mariadb/
     image: "mariadbf"
-    container_name: "maria1"
+    container_name: "mariaFreezer"
     environment:
       - MARIADB_ROOT_PASSWORD=root 
     networks:
@@ -35,7 +35,7 @@ services:
 # docker proftpd
   proftpd:
     build: ./proftpd/
-    container_name: "proftpd1"
+    container_name: "proftpdFreezer"
     image: "proftpdf"
     networks:
       FreezerNetwork:
@@ -44,7 +44,7 @@ services:
 # docker nginx
   nginx:
     build: ./nginx/ 
-    container_name: "nginx1"  
+    container_name: "nginxFreezer"  
     image: "nginxf"
     ports:
       - "80:80"
