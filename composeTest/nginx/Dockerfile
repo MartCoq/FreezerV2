@@ -2,6 +2,7 @@ FROM nginx:stable
 RUN mkdir /etc/nginx/ssl
 RUN mkdir /var/log/nginx/jenkins
 RUN apt-get update -yq
+RUN apt-get install python3 -yq
 RUN apt-get install python3-pip -yq
 RUN apt-get install libmariadb3 libmariadb-dev -yq
 RUN pip3 install mariadb --no-input -q
