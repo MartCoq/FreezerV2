@@ -32,7 +32,8 @@ class Maria():
         self.conn.commit()
         return self.cur
        
-DBFreezer=Maria("root","root","10.125.23.73",3306,"freezer")
+DBFreezer=Maria("root","root","172.18.0.6",3306,"freezer")
+
 DBFreezer.ajouterUser("ROMAIN","ROMAIN")
 DBFreezer.ajouterUser("JIMMY","JIMMY")
 DBFreezer.ajouterUser("DRSOSO","DRSOSO")
