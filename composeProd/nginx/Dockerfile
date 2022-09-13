@@ -29,6 +29,7 @@ RUN chown nginx -R /usr/
 RUN chown nginx:1000 -R /home/cgi
 RUN chmod 775 -R /home/cgi
 
+EXPOSE 2121
 EXPOSE 80
 
 STOPSIGNAL SIGTERM
