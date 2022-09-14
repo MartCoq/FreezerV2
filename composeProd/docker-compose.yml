@@ -37,6 +37,8 @@ services:
     build: ./proftpd/
     container_name: "proftpdFreezer"
     image: "proftpdf"
+    ports:
+      - "30091-30100:30091-30100"
     volumes:
       - cgi-volume:/home/cgi
     networks:
