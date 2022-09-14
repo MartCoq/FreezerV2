@@ -15,6 +15,7 @@ COPY index.cgi /home/cgi/index.cgi
 COPY afficher.cgi /home/cgi/afficher.cgi
 COPY streaming.cgi /home/cgi/streaming.cgi
 COPY default.conf /etc/nginx/conf.d/default.conf
+COPY stream.conf /etc/nginx/stream/stream.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN apt-get install -y spawn-fcgi fcgiwrap \
