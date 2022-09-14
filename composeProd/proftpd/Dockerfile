@@ -20,6 +20,9 @@ RUN chown freezer:1000 -R /home/cgi
 RUN chmod 775 -R /home/cgi
 
 EXPOSE 21
+EXPOSE 30001
+EXPOSE 30002
+EXPOSE 30003
 
 CMD proftpd --nodaemon -c /etc/proftpd/proftpd.conf
 
